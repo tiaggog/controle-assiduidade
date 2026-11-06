@@ -1,0 +1,22 @@
+# Anexos dos documentos dos colaboradores (dados pessoais): nunca vão para o repositório
+uploads/documentos/
+
+# Backups locais (contêm dados reais do banco)
+_backup/
+*.sql.bak
+
+# Página avulsa que não faz parte do sistema
+clinica.php
+
+# Apresentações e arquivos do Office
+*.pptx
+*.xlsx
+*.docx
+~$*
+
+# Sistema operacional e editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
