@@ -202,7 +202,7 @@ html:has(body.login-page), body.login-page { background: #07122a; }
 }
 .login-grid {
     width: 100%; max-width: 940px;
-    display: grid; grid-template-columns: 1fr 380px; gap: 4.5rem; align-items: center;
+    display: grid; grid-template-columns: 1fr 380px; gap: 4.5rem; align-items: start;
 }
 .login-logo { width: 160px; height: auto; margin-bottom: 1.75rem; }
 .login-intro h2 { color: #fff; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.75rem; }
@@ -210,6 +210,9 @@ html:has(body.login-page), body.login-page { background: #07122a; }
 .login-recursos { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2, max-content); gap: 0.75rem 1.75rem; }
 .login-recursos li { display: flex; align-items: center; gap: 0.55rem; color: #dbe3ef; font-size: 0.86rem; }
 .login-recursos i { color: var(--app-accent); font-size: 1rem; }
+/* O rodapé fica fora do cálculo de altura, para o cartão alinhar ao centro com o texto da esquerda */
+.login-lado { position: relative; }
+.login-lado .login-foot { position: absolute; left: 0; right: 0; top: 100%; }
 .login-card {
     width: 100%;
     max-width: 380px;
@@ -244,6 +247,7 @@ html:has(body.login-page), body.login-page { background: #07122a; }
     .login-intro h2 { font-size: 1.5rem; }
     .login-intro p { font-size: 0.88rem; margin: 0 auto; }
     .login-recursos { display: none; }
+    .login-lado .login-foot { position: static; }
 }
 @media (max-width: 575.98px) {
     .login-card { padding: 1.5rem; }
