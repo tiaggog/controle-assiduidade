@@ -189,127 +189,49 @@ body {
 .dropdown-menu { border: 1px solid var(--app-border); border-radius: var(--app-radius); font-size: 0.85rem; }
 
 /* ---------- Tela de login ---------- */
-/* Cartão central com duas colunas: marca (esquerda) e formulário (direita), mesmas margens internas */
+/* Layout limpo: logo sobre o fundo da marca e um único cartão com o formulário */
+html:has(body.login-page), body.login-page { background: #07122a; }
 .login-shell {
     min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: 2rem 1.25rem;
-    /* Fundo escuro da marca com brilho laranja suave e grade discreta */
-    background:
-        radial-gradient(circle at 15% 15%, rgba(243, 146, 0, 0.14), transparent 35%),
-        radial-gradient(circle at 85% 85%, rgba(232, 80, 31, 0.12), transparent 35%),
-        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px) 0 0 / 40px 40px,
-        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px) 0 0 / 40px 40px,
-        linear-gradient(160deg, #07122a 0%, #0b1a33 55%, #10244a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: radial-gradient(circle at 50% 0%, #16305c 0%, #0b1a33 55%, #07122a 100%);
 }
+.login-logo { width: 170px; height: auto; margin-bottom: 1.75rem; }
 .login-card {
     width: 100%;
-    max-width: 860px;
-    min-height: 500px;
-    display: grid;
-    grid-template-columns: 1.05fr 1fr;
+    max-width: 380px;
+    padding: 2rem;
     background: var(--app-surface);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
+.login-card h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.2rem; }
+.login-sub { color: var(--app-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+.login-campo { margin-bottom: 1rem; }
+.login-campo .form-label { text-transform: none; letter-spacing: 0; font-size: 0.82rem; font-weight: 500; color: var(--app-text); margin-bottom: 0.35rem; }
+.login-card .form-control { padding: 0.6rem 0.8rem; }
+.login-card .form-control:focus { border-color: var(--app-accent); box-shadow: 0 0 0 3px rgba(243, 146, 0, 0.18); }
+.login-senha { position: relative; }
+.login-senha .form-control { padding-right: 2.6rem; }
+.btn-toggle-senha {
+    position: absolute; top: 0; right: 0; height: 100%; width: 2.6rem;
+    border: 0; background: none; color: var(--app-subtle);
+}
+.btn-toggle-senha:hover { color: var(--app-text); }
+.login-submit { padding: 0.65rem 1rem; font-size: 0.9rem; font-weight: 600; margin-top: 0.5rem; }
+.login-foot {
+    margin: 1.5rem 0 0; text-align: center; line-height: 1.7;
+    font-size: 0.78rem; color: #a9b6cc;
+}
+.login-foot span { color: #6f7f99; font-size: 0.72rem; }
 
-.login-brand {
-    position: relative;
-    padding: 2.25rem;
-    display: flex;
-    flex-direction: column;
-    color: #dbe3ef;
-    background:
-        radial-gradient(circle at 100% 0%, rgba(243, 146, 0, 0.20), transparent 45%),
-        linear-gradient(160deg, #102449 0%, #16305c 100%);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-}
-.login-brand::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 4px;
-    background: var(--app-brand-gradient);
-}
-.login-logo { width: 150px; height: auto; display: block; }
-.login-brand-body { margin: auto 0; padding: 1.75rem 0; }
-.login-eyebrow {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--app-accent);
-}
-.login-eyebrow::before { content: ''; width: 18px; height: 2px; background: var(--app-brand-gradient); border-radius: 2px; }
-.login-brand h2 {
-    color: #fff; font-weight: 700; letter-spacing: -0.02em;
-    font-size: 1.4rem; line-height: 1.25;
-    margin: 0.7rem 0 0.6rem; max-width: 360px;
-}
-.login-brand-lead { color: var(--app-sidebar-text); font-size: 0.82rem; max-width: 340px; margin: 0; }
-
-.login-features { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: 0.8rem; }
-.login-features li { display: grid; grid-template-columns: 34px 1fr; gap: 0.75rem; align-items: center; }
-.login-features .ico {
-    width: 34px; height: 34px; border-radius: 9px;
-    display: grid; place-items: center;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: var(--app-accent); font-size: 0.95rem;
-}
-.login-features strong { display: block; color: #fff; font-size: 0.82rem; font-weight: 600; }
-.login-features span { display: block; color: var(--app-sidebar-text); font-size: 0.74rem; }
-
-.login-brand-foot {
-    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 0.7rem; color: #7f8ea8;
-}
-
-.login-panel {
-    padding: 2.25rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-}
-.login-panel-body { margin: auto 0; width: 100%; max-width: 330px; align-self: center; }
-.login-panel h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin: 0.5rem 0 0.3rem; }
-.login-panel .login-sub { color: var(--app-muted); font-size: 0.82rem; margin-bottom: 1.4rem; }
-.login-panel .form-label { margin-bottom: 0.4rem; }
-.login-panel .input-group-text { background: #fff !important; border-right: 0; color: var(--app-subtle); padding-left: 0.85rem; }
-.login-panel .input-group .form-control { border-left: 0; padding: 0.55rem 0.75rem; }
-.login-panel .input-group:focus-within .input-group-text { border-color: var(--app-accent); color: var(--app-accent); }
-.login-panel .input-group:focus-within .form-control { box-shadow: none; }
-.login-panel .input-group:focus-within { box-shadow: 0 0 0 3px rgba(243, 146, 0, 0.18); border-radius: 8px; }
-.login-panel .btn-toggle-senha {
-    border: 1px solid var(--app-border-strong); border-left: 0; background: #fff;
-    color: var(--app-subtle); padding: 0 0.85rem;
-}
-.login-panel .btn-toggle-senha:hover { color: var(--app-text); }
-.login-panel .input-group:focus-within .btn-toggle-senha { border-color: var(--app-accent); }
-.login-panel .input-group .form-control:has(+ .btn-toggle-senha) { border-right: 0; }
-.login-submit { padding: 0.6rem 1rem; font-size: 0.88rem; margin-top: 0.4rem; }
-.login-help {
-    display: flex; gap: 0.6rem; align-items: flex-start;
-    margin-top: 1.25rem; padding: 0.7rem 0.85rem;
-    background: var(--app-surface-2); border: 1px solid var(--app-border); border-radius: 10px;
-    font-size: 0.74rem; color: var(--app-muted);
-}
-.login-help i { color: var(--app-primary); font-size: 1rem; line-height: 1.2; }
-.login-panel-foot {
-    display: flex; justify-content: center; align-items: center; gap: 0.4rem;
-    font-size: 0.7rem; color: var(--app-subtle);
-}
-
-@media (max-width: 991.98px) {
-    .login-card { grid-template-columns: 1fr; min-height: 0; max-width: 400px; }
-    .login-brand { padding: 1.5rem; align-items: center; }
-    .login-brand-body, .login-brand-foot { display: none; }
-    .login-logo { width: 150px; }
-    .login-panel { padding: 2rem 1.5rem 1.5rem; }
-    .login-panel-foot { margin-top: 1.5rem; }
-}
 @media (max-width: 575.98px) {
-    .login-shell { padding: 0; place-items: stretch; }
-    .login-card { border-radius: 0; max-width: none; box-shadow: none; }
+    .login-card { padding: 1.5rem; }
+    .login-logo { width: 140px; }
 }
 
 .app-menu-toggle { border: 1px solid var(--app-border); background: #fff; border-radius: 8px; width: 36px; height: 36px; flex-shrink: 0; color: var(--app-text, #0f1b2d); cursor: pointer; transition: background 0.15s, border-color 0.15s; }
