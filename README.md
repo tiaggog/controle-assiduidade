@@ -12,6 +12,45 @@ Sistema web para controlar a frequência diária dos colaboradores terceirizados
 - **Perfis:** Administrador, Recursos Humanos, Supervisão, Gestão e Financeiro, cada um com o seu acesso.
 - Modo dia e modo noite, impressão em PDF e exportação para Excel.
 
+## Telas
+
+> Prints com dados fictícios (nomes de pessoas e empresas trocados).
+
+### Lançar Frequência
+Folha diária por empresa e filial: condição de cada colaborador, horários, saldo de horas, substituição por diarista e bloqueio por documentação.
+
+![Lançar Frequência](docs/screenshots/01-lancar-frequencia.png)
+
+### Controle de Presença
+Mapa do período por funcionário, com indicadores e legenda de cores.
+
+![Controle de Presença](docs/screenshots/02-controle-presenca.png)
+
+### Pré-Fatura
+Cálculo do valor de cada funcionário pela Tabela de Valores: valor mensal, valor por dia útil, faltas e descontos.
+
+![Pré-Fatura](docs/screenshots/03-pre-fatura.png)
+
+### Documentos
+Situação dos documentos de cada colaborador: em dia, vencendo ou bloqueado.
+
+![Documentos](docs/screenshots/04-documentos.png)
+
+### Banco de Horas
+Créditos, débitos e saldo por funcionário no período.
+
+![Banco de Horas](docs/screenshots/05-banco-horas.png)
+
+### Tabela de Valores
+Valor mensal por filial, cargo e turno, usado na pré-fatura.
+
+![Tabela de Valores](docs/screenshots/06-tabela-valores.png)
+
+### Modo noite
+Tema escuro, escolhido no botão da barra superior.
+
+![Modo noite](docs/screenshots/07-modo-noite.png)
+
 ## Tecnologias
 
 PHP 8.2, MySQL/MariaDB (PDO), Bootstrap 5.3 e Bootstrap Icons. Pensado para rodar no XAMPP.
