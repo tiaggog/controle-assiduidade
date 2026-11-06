@@ -1,4 +1,14 @@
 <?php
+/**
+ * Tabela de Valores
+ *
+ * Valor MENSAL de cada categoria por filial e turno (T1 = diurno, T3 = noturno):
+ *  - Fixo: Líder, Conferente e Ajudante/Substituto (quadro e substituições pelo cargo da diarista);
+ *  - Diarista Extra: Semana e Domingos/Feriados (extras; Domingos/Feriados também vale para fixo).
+ * A pré-fatura divide o valor mensal pelos dias úteis informados para chegar ao valor do dia.
+ * Acesso: Administrador e Financeiro editam; Gestão só visualiza.
+ * Ação (POST salvar_valores): salva a grade inteira (aceita valores como 3.145,00).
+ */
 require_once 'conexao.php';
 
 // Valores mensais por filial (CD), categoria e turno. Editar: administrador e financeiro; gestão só consulta

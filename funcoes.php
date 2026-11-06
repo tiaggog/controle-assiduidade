@@ -1,5 +1,17 @@
 <?php
-// Funcoes compartilhadas entre as telas do sistema
+/**
+ * Funções compartilhadas por todas as telas do sistema
+ *
+ * Organização do arquivo:
+ *  - Horas, moeda, escape de HTML, alertas e exportação CSV;
+ *  - Menu, perfis e permissões (itens_menu, grupos_por_perfil, pode_acessar);
+ *  - Filiais e escopo da Supervisão (filial_do_usuario, sql_filial);
+ *  - Sessão, token CSRF e proteção das páginas (proteger_pagina);
+ *  - Layout: cabeçalho, menu lateral, barra superior, rodapé e scripts comuns;
+ *  - Filtros dos relatórios (período, empresa, filial e funcionários);
+ *  - Faturamento: Tabela de Valores, dias especiais, cálculo e exibição da pré-fatura;
+ *  - Documentos, pendências de frequência e notificações do sininho.
+ */
 
 // Calcula as horas entre entrada e saida (HH:MM). Se a saida for menor, considera virada de dia.
 function calcular_horas($entrada, $saida) {
@@ -24,6 +36,7 @@ function separar_horas($horas, $carga) {
     return [min($horas, $carga), max($horas - $carga, 0)];
 }
 
+// Hora do banco (HH:MM:SS) em HH:MM; vazio quando não há hora
 function hora_curta($hora) {
     return $hora ? substr($hora, 0, 5) : '';
 }
@@ -40,10 +53,12 @@ function fmt_horas($valor) {
     return ((int)round($valor * 60) < 0 ? '−' : '') . hhmm($valor);
 }
 
+// Valor em reais no formato brasileiro (R$ 1.234,56)
 function fmt_moeda($valor) {
     return 'R$ ' . number_format((float)$valor, 2, ',', '.');
 }
 
+// Escapa texto para exibir em HTML com segurança (atalho de htmlspecialchars)
 function e($texto) {
     return htmlspecialchars((string)$texto, ENT_QUOTES, 'UTF-8');
 }
@@ -74,6 +89,7 @@ function csv_num($valor) {
     return number_format((float)$valor, 2, ',', '');
 }
 
+// Empresas clientes (terceirizadas) em ordem alfabética
 function lista_empresas(PDO $pdo) {
     return $pdo->query("SELECT id, razao_social FROM empresas_terceirizadas ORDER BY razao_social ASC")->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -104,6 +120,7 @@ function itens_menu() {
     ];
 }
 
+// A página atual corresponde a este item do menu? (Faturamento também cobre fatura salva e relatório antigo)
 function pagina_ativa($arquivo) {
     $pagina_atual = basename($_SERVER['PHP_SELF']);
     return $pagina_atual === $arquivo || ($arquivo === 'calcular_faturamento.php' && in_array($pagina_atual, ['relatorio_financeiro.php', 'fatura_salva.php'], true));
@@ -135,6 +152,7 @@ function grupos_por_perfil() {
     ];
 }
 
+// Grupo do menu ao qual a página pertence (null = página sem grupo, liberada para qualquer usuário logado)
 function grupo_da_pagina($arquivo) {
     if (in_array($arquivo, ['relatorio_financeiro.php', 'fatura_salva.php'], true)) {
         $arquivo = 'calcular_faturamento.php';
@@ -147,6 +165,7 @@ function grupo_da_pagina($arquivo) {
     return null;
 }
 
+// O perfil pode abrir esta página? Regras especiais: Documentos (Administrador e RH) e Filiais (só Administrador)
 function pode_acessar($arquivo, $perfil = null) {
     $perfil = $perfil ?? (usuario_atual()['perfil'] ?? null);
     // Documentos: somente admin e RH
@@ -176,10 +195,12 @@ function pagina_inicial($perfil) {
     return 'login.php';
 }
 
+// Usuário logado (dados carregados em proteger_pagina) ou null
 function usuario_atual() {
     return $GLOBALS['usuario_logado'] ?? null;
 }
 
+// O usuário logado é Administrador?
 function usuario_admin() {
     return (usuario_atual()['perfil'] ?? '') === 'admin';
 }
@@ -192,6 +213,7 @@ function lista_filiais(PDO $pdo, $somente_ativas = true) {
     return $pdo->query("SELECT id, nome, status FROM filiais" . ($somente_ativas ? " WHERE status = 1" : "") . " ORDER BY nome ASC")->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// Nome da filial pelo id, a partir de uma lista já carregada
 function nome_filial(array $filiais, $filial_id) {
     foreach ($filiais as $f) {
         if ((int)$f['id'] === (int)$filial_id) {
@@ -248,6 +270,7 @@ function render_campo_filial(array $filiais, $filial_id, $nome = 'filial_id', $r
     echo '</select>';
 }
 
+// Inicia a sessão PHP com cookie protegido (HttpOnly e SameSite=Lax)
 function iniciar_sessao() {
     if (session_status() === PHP_SESSION_NONE) {
         session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
@@ -256,6 +279,7 @@ function iniciar_sessao() {
     }
 }
 
+// Token de segurança da sessão, enviado em todo formulário POST
 function csrf_token() {
     if (empty($_SESSION['csrf'])) {
         $_SESSION['csrf'] = bin2hex(random_bytes(32));
@@ -263,6 +287,7 @@ function csrf_token() {
     return $_SESSION['csrf'];
 }
 
+// O token enviado no POST confere com o da sessão?
 function csrf_valido() {
     return isset($_POST['_csrf']) && hash_equals(csrf_token(), (string)$_POST['_csrf']);
 }
@@ -315,6 +340,7 @@ function proteger_pagina(PDO $pdo) {
     }
 }
 
+// Menu lateral: só mostra os grupos e páginas que o perfil pode acessar
 function render_menu() {
     ?>
 <aside class="app-sidebar offcanvas-lg offcanvas-start no-print" tabindex="-1" id="menuLateral">
@@ -354,6 +380,7 @@ function render_menu() {
     <?php
 }
 
+// Abre a página: <head>, menu lateral, barra superior (data, modo dia/noite, sininho, usuário) e título
 function render_cabecalho($titulo, $subtitulo = '') {
     // Grupo do menu da pagina atual, usado no caminho da barra superior
     $grupo_atual = '';
@@ -441,6 +468,7 @@ function render_cabecalho($titulo, $subtitulo = '') {
     <?php
 }
 
+// Fecha a página e carrega os scripts comuns (menu, modo dia/noite, seleção com pesquisa, alertas, token)
 function render_rodape() {
     ?>
     </main>
@@ -805,6 +833,7 @@ function render_cabecalho_relatorio($titulo, $empresa, $data_inicio, $data_fim, 
     <?php
 }
 
+// Razão social da empresa pelo id, a partir de uma lista já carregada
 function nome_empresa(array $empresas, $empresa_id) {
     foreach ($empresas as $emp) {
         if ($emp['id'] == $empresa_id) {
@@ -842,6 +871,7 @@ function cargos() {
     return ['Lider' => 'Líder', 'Conferente' => 'Conferente', 'Ajudante' => 'Ajudante'];
 }
 
+// Turnos aceitos no cadastro: T1 = diurno, T3 = noturno
 function turnos() {
     return ['T1' => 'T1 · Diurno', 'T3' => 'T3 · Noturno'];
 }
@@ -1154,6 +1184,7 @@ function exportar_csv_fatura($nome_arquivo, array $func, array $diar, array $tot
 // Dias de antecedência para avisar que a validade de um documento está acabando
 const DOCUMENTO_AVISO_DIAS = 7;
 
+// Tipos de documento configurados (nome e se é exigido)
 function tipos_documento(PDO $pdo) {
     return $pdo->query("SELECT id, nome, exigido FROM documentos_tipos ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
 }

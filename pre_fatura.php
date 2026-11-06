@@ -1,4 +1,19 @@
 <?php
+/**
+ * Pré-Fatura
+ *
+ * Prévia do faturamento do período por empresa (e opcionalmente filial e funcionários).
+ * Acesso: Administrador, Gestão e Financeiro.
+ *
+ * Cálculo (calcular_pre_fatura em funcoes.php):
+ *  - Funcionário fixo: valor mensal da Tabela de Valores − faltas × (valor mensal ÷ dias úteis)
+ *    + domingos/feriados trabalhados pela coluna Domingos/Feriados;
+ *  - Substituição: falta coberta não é descontada e não soma no total (o posto já está no valor mensal);
+ *  - Extras: somam pela coluna Diarista Extra (Semana ou Domingos/Feriados).
+ *
+ * Ação (POST salvar_fatura): guarda a pré-fatura com um nome/código no histórico do Faturamento.
+ * Só calcula quando todos os dias do período têm frequência lançada. Saídas: tela, PDF e Excel.
+ */
 require_once 'conexao.php';
 
 $data_inicio = $_GET['data_inicio'] ?? date('Y-m-01');

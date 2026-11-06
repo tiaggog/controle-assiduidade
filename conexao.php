@@ -1,4 +1,12 @@
 <?php
+/**
+ * Conexão com o banco e estrutura automática
+ *
+ * - Abre a conexão PDO com o MySQL/MariaDB (ajuste host, banco, usuário e senha abaixo);
+ * - Cria/atualiza tabelas e colunas que o sistema usa (migrações simples, só adicionam o que falta);
+ * - Carrega as funções compartilhadas (funcoes.php) e aplica o controle de login e permissão
+ *   (proteger_pagina) em toda página que inclui este arquivo.
+ */
 // Define o fuso horário padrão para a sua região
 date_default_timezone_set('America/Fortaleza');
 

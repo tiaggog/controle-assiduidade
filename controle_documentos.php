@@ -1,4 +1,16 @@
 <?php
+/**
+ * Controle de Documentos
+ *
+ * Acesso: Administrador e Recursos Humanos.
+ *  - Lista cada colaborador com a situação dos documentos: em dia, vencendo (até 7 dias) ou bloqueado.
+ *  - Permite lançar a validade e anexar foto/PDF de cada documento (anexos em uploads/documentos,
+ *    sem acesso direto: abrem só por esta página, com ?arquivo=).
+ *  - Configuração dos tipos de documento e de quais são exigidos (POST salvar_tipos): só o Administrador.
+ *
+ * Documento exigido pendente ou vencido bloqueia o colaborador no Lançar Frequência
+ * (ele só pode ficar como Bloqueado ou Substituído naquele dia).
+ */
 require_once 'conexao.php';
 
 $mensagem = '';

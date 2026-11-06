@@ -1,4 +1,11 @@
 <?php
+/**
+ * Relatório financeiro por horas (versão antiga)
+ *
+ * Cálculo antigo por valor da hora normal e da hora extra. Não aparece mais no menu:
+ * o faturamento passou a ser feito pela Pré-Fatura (por dias trabalhados e Tabela de Valores).
+ * Mantido apenas para consulta; o acesso segue as regras do grupo Financeiro.
+ */
 require_once 'conexao.php';
 
 $data_inicio = $_POST['data_inicio'] ?? null;

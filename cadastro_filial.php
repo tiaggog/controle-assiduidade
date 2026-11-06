@@ -1,4 +1,12 @@
 <?php
+/**
+ * Cadastro de Filiais (CDs)
+ *
+ * Acesso: somente Administrador.
+ * Ações (POST): cadastrar, editar (nome) e alterar_status (ativar/inativar).
+ * Os nomes são gravados em maiúsculas. A filial define a folha de frequência,
+ * a visão da Supervisão e a linha usada na Tabela de Valores.
+ */
 require_once 'conexao.php';
 
 $mensagem = '';

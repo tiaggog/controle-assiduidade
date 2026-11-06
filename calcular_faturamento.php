@@ -1,4 +1,12 @@
 <?php
+/**
+ * Faturamento: histórico das faturas salvas
+ *
+ * Acesso: Administrador, Gestão e Financeiro.
+ * Lista as pré-faturas salvas na tela Pré-Fatura, com busca por nome/código,
+ * filtro de período e de empresa. Cada fatura abre em fatura_salva.php.
+ * Ação (POST): excluir_fatura (somente Administrador e Financeiro).
+ */
 require_once 'conexao.php';
 
 // Excluir fatura salva: somente administrador e financeiro

@@ -1,4 +1,21 @@
 <?php
+/**
+ * Lançar Frequência
+ *
+ * Folha diária por data, filial e empresa. Acesso: Administrador e Supervisão (só a própria filial).
+ *
+ * Condições de cada funcionário do quadro:
+ *  - Presente (entrada e saída obrigatórias) e Domingo/Feriado (presença em dia especial);
+ *  - Falta, Justificado (conta como dia normal) e Substituído (falta coberta por uma diarista);
+ *  - Bloqueado: documentação irregular no dia; nesse caso só Bloqueado ou Substituído são aceitos.
+ * Extras do dia: diaristas chamadas por aumento de demanda.
+ *
+ * Regras principais:
+ *  - A folha só é salva completa (todos os funcionários e horários preenchidos);
+ *  - Depois de salvo, o dia só pode ser alterado pelo Administrador (os demais completam quem faltou);
+ *  - Cargo, turno e a marca de documentação irregular ficam gravados no lançamento (histórico);
+ *  - Substituições e extras usam diaristas cadastradas e com documentação em dia.
+ */
 require_once 'conexao.php';
 
 // Captura os parâmetros via GET (ajustado para bater com o resto do escopo)

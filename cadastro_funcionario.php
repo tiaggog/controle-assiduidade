@@ -1,4 +1,15 @@
 <?php
+/**
+ * Cadastro de Funcionários e Diaristas
+ *
+ * Acesso: Administrador, Recursos Humanos e Supervisão (esta, só na própria filial).
+ * Ações (POST): cadastrar, editar e alterar_status (inativar guarda a data de inativação).
+ *
+ * Funcionário = quadro fixo de uma empresa e filial; Diarista = cobre faltas (substituição)
+ * ou reforça a equipe (extra). Cargo e turno são obrigatórios: definem a coluna usada
+ * na Tabela de Valores e ficam gravados em cada dia lançado.
+ * A lista tem filtros por filial, tipo e situação (ativos, inativos, todos).
+ */
 require_once 'conexao.php';
 
 $mensagem = '';

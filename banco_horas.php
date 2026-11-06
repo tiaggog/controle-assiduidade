@@ -1,4 +1,19 @@
 <?php
+/**
+ * Banco de Horas
+ *
+ * Relatório de créditos e débitos de horas por funcionário no período filtrado.
+ * Acesso: Administrador, Supervisão (só a própria filial), Gestão e Financeiro.
+ *
+ * Saldo de cada dia lançado:
+ *  - Presente:    crédito do que passar da carga diária e débito do que faltar;
+ *  - Falta:       débito da carga diária inteira;
+ *  - Justificado: conta como dia normal (sem crédito nem débito);
+ *  - Bloqueado por documentação e substituído: não entra no cálculo.
+ *
+ * O relatório só abre quando todos os dias do período têm frequência lançada (buscar_pendencias).
+ * Saídas: tela, impressão/PDF e Excel (?formato=csv).
+ */
 require_once 'conexao.php';
 
 $data_inicio = $_GET['data_inicio'] ?? date('Y-m-01');

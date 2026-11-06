@@ -1,4 +1,13 @@
 <?php
+/**
+ * Usuários e Perfis
+ *
+ * Acesso: somente Administrador.
+ * Ações (POST): criar, editar (nome, perfil e filial), senha (redefinir) e status (ativar/desativar).
+ * Perfis: Administrador, Recursos Humanos, Supervisão (presa a uma filial), Gestão e Financeiro.
+ * Proteções: sempre sobra ao menos um administrador ativo e ninguém altera o próprio perfil.
+ * A tabela "Permissões por perfil" é montada a partir de grupos_por_perfil() em funcoes.php.
+ */
 require_once 'conexao.php';
 
 $mensagem = '';

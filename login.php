@@ -1,4 +1,12 @@
 <?php
+/**
+ * Login
+ *
+ * Entrada no sistema por usuário e senha (senha guardada com password_hash).
+ * No primeiro acesso (nenhum usuário cadastrado), a mesma tela cria o Administrador.
+ * Depois do login, volta para a página pedida (?voltar=), se o perfil puder acessá-la,
+ * ou para a primeira página liberada do perfil.
+ */
 require_once 'conexao.php';
 
 // Destino após o login: só aceita páginas internas do sistema (sem domínio nem pastas)

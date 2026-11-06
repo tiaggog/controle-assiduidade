@@ -1,4 +1,11 @@
 <?php
+/**
+ * Fatura salva
+ *
+ * Mostra uma pré-fatura salva (?id=) exatamente com os valores gravados no momento em que foi salva;
+ * mudanças posteriores na frequência ou na Tabela de Valores não alteram o histórico.
+ * Acesso: o mesmo do Faturamento. Saídas: tela, impressão/PDF e Excel (?formato=csv).
+ */
 require_once 'conexao.php';
 
 // Fatura salva a partir da Pré-Fatura: mostra os valores exatamente como foram salvos

@@ -1,4 +1,17 @@
 <?php
+/**
+ * Controle de Presença
+ *
+ * Mapa do período por funcionário (um quadrinho colorido por dia), com indicadores,
+ * lista de substituições e de extras.
+ * Acesso: Administrador, Supervisão (só a própria filial), Gestão e Financeiro.
+ *
+ * Cores: Presente, Falta, Justificado, Substituído (falta coberta por diarista, não conta como falta),
+ * Sem lançamento e Bloqueado por documentação (hachurado).
+ * Filtros: período, filial, empresa e um ou vários funcionários.
+ * O relatório só abre quando todos os dias do período têm frequência lançada (buscar_pendencias).
+ * Saídas: tela, impressão/PDF e Excel (?formato=csv).
+ */
 require_once 'conexao.php';
 
 $data_inicio = $_GET['data_inicio'] ?? date('Y-m-01');
