@@ -86,8 +86,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="login-page">
 <main class="login-shell">
-    <img src="logo_jb.png" alt="Grupo JB Transporte e Logística" class="login-logo">
+  <div class="login-grid">
+    <section class="login-intro">
+        <img src="logo_jb.png" alt="Grupo JB Transporte e Logística" class="login-logo">
+        <h2>Controle de Assiduidade</h2>
+        <p>Frequência, documentação e faturamento dos colaboradores terceirizados em um só lugar.</p>
+        <ul class="login-recursos">
+            <li><i class="bi bi-calendar2-check"></i>Frequência diária</li>
+            <li><i class="bi bi-file-earmark-check"></i>Documentos</li>
+            <li><i class="bi bi-hourglass-split"></i>Banco de horas</li>
+            <li><i class="bi bi-receipt"></i>Pré-fatura</li>
+        </ul>
+    </section>
 
+    <div class="login-lado">
     <form method="POST" class="login-card" autocomplete="on">
         <input type="hidden" name="_csrf" value="<?php echo e(csrf_token()); ?>">
 
@@ -95,8 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Criar administrador</h1>
             <p class="login-sub">Primeiro acesso: crie o usuário que vai cadastrar os demais.</p>
         <?php else: ?>
-            <h1>Entrar</h1>
-            <p class="login-sub">Controle de Assiduidade</p>
+            <h1>Acesse sua conta</h1>
+            <p class="login-sub">Entre com o usuário e a senha fornecidos pelo administrador.</p>
         <?php endif; ?>
 
         <?php if ($erro) echo alerta('danger', e($erro)); ?>
@@ -140,6 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if (!$primeiro_acesso): ?>Esqueceu a senha? Fale com o administrador.<br><?php endif; ?>
         <span>© <?php echo date('Y'); ?> Grupo JB Transporte e Logística</span>
     </p>
+    </div>
+  </div>
 </main>
 
 <script>
