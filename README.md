@@ -4,7 +4,7 @@ Sistema web para controlar a frequência diária dos colaboradores terceirizados
 
 ## O que o sistema faz
 
-- **Cadastros:** funcionários e diaristas (cargo, turno, empresa e filial), filiais e usuários.
+- **Cadastros:** empresas clientes (razão social e CNPJ), funcionários e diaristas (cargo, turno, empresa e filial), filiais e usuários.
 - **Documentos:** validade e anexos dos documentos de cada colaborador. Quem está com documento pendente ou vencido fica bloqueado na frequência.
 - **Lançar Frequência:** folha diária por empresa e filial (Presente, Domingo/Feriado, Falta, Justificado, Substituído por diarista, Bloqueado) e extras do dia.
 - **Relatórios:** Controle de Presença (mapa por dia) e Banco de Horas.

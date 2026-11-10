@@ -90,8 +90,8 @@ function csv_num($valor) {
 }
 
 // Empresas clientes (terceirizadas) em ordem alfabética
-function lista_empresas(PDO $pdo) {
-    return $pdo->query("SELECT id, razao_social FROM empresas_terceirizadas ORDER BY razao_social ASC")->fetchAll(PDO::FETCH_ASSOC);
+function lista_empresas(PDO $pdo, $so_ativas = false) {
+    return $pdo->query("SELECT id, razao_social, status FROM empresas_terceirizadas" . ($so_ativas ? " WHERE status = 1" : "") . " ORDER BY razao_social ASC")->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Estrutura do menu lateral: grupo => [arquivo => [rotulo, icone]]
@@ -99,6 +99,7 @@ function itens_menu() {
     return [
         'Cadastros' => [
             'cadastro_funcionario.php' => ['Funcionários', 'people'],
+            'cadastro_empresa.php'     => ['Empresas', 'briefcase'],
             'controle_documentos.php'  => ['Documentos', 'folder-check'],
             'cadastro_filial.php'      => ['Filiais', 'buildings'],
         ],

@@ -245,6 +245,11 @@ try {
     if ((int)$stmt_coluna->fetchColumn() === 0) {
         $pdo->exec("ALTER TABLE controle_assiduidade ADD COLUMN doc_irregular VARCHAR(255) NULL DEFAULT NULL AFTER dia_especial");
     }
+    // Empresas: situação (ativa/inativa), usada no Cadastros › Empresas
+    $stmt_coluna->execute([':tabela' => 'empresas_terceirizadas', ':coluna' => 'status']);
+    if ((int)$stmt_coluna->fetchColumn() === 0) {
+        $pdo->exec("ALTER TABLE empresas_terceirizadas ADD COLUMN status TINYINT(1) NOT NULL DEFAULT 1");
+    }
     // Feriados (lançamentos antigos; domingo é automático)
     $pdo->exec("CREATE TABLE IF NOT EXISTS feriados (
         filial_id INT(11) NOT NULL,

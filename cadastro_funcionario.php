@@ -238,7 +238,7 @@ render_cabecalho('Funcionários e Diaristas', 'Cadastro do quadro fixo e das dia
                         <label class="form-label fw-semibold">Vínculo Empresarial</label>
                         <select name="empresa_id" id="empresa_id" class="form-select" required>
                             <option value="" id="opcao_sem_vinculo">Selecione...</option>
-                            <?php foreach ($empresas as $emp): ?>
+                            <?php foreach ($empresas as $emp): if ((int)$emp['status'] !== 1) continue; // empresa inativa não recebe novos cadastros ?>
                                 <option value="<?php echo $emp['id']; ?>"><?php echo e($emp['razao_social']); ?></option>
                             <?php endforeach; ?>
                         </select>
