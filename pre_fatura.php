@@ -6,9 +6,9 @@
  * Acesso: Administrador, Gestão e Financeiro.
  *
  * Cálculo (calcular_pre_fatura em funcoes.php):
- *  - Funcionário fixo: valor mensal da Tabela de Valores − faltas × (valor mensal ÷ dias úteis)
+ *  - Funcionário fixo: valor p/ dia útil (valor mensal da Tabela de Valores ÷ dias úteis) × dias trabalhados
  *    + domingos/feriados trabalhados pela coluna Domingos/Feriados;
- *  - Substituição: falta coberta não é descontada e não soma no total (o posto já está no valor mensal);
+ *  - Substituição: falta coberta conta como dia trabalhado do substituído e a diarista não soma no total;
  *  - Extras: somam pela coluna Diarista Extra (Semana ou Domingos/Feriados).
  *
  * Ação (POST salvar_fatura): guarda a pré-fatura com um nome/código no histórico do Faturamento.
@@ -78,7 +78,7 @@ if (($_GET['formato'] ?? '') === 'csv' && $empresa_id && !$pendencias) {
     exportar_csv_fatura('pre_fatura_' . $data_inicio . '_a_' . $data_fim . '.csv', $linhas_func, $linhas_diar, $totais);
 }
 
-render_cabecalho('Pré-Fatura', 'Prévia do faturamento por dias trabalhados: valor da Tabela de Valores ÷ dias úteis × dias trabalhados.');
+render_cabecalho('Pré-Fatura', 'Prévia do faturamento: valor do dia útil (Tabela de Valores ÷ dias úteis) × dias trabalhados.');
 ?>
 
 <?php render_filtro_periodo($empresas, $data_inicio, $data_fim, $empresa_id,

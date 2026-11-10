@@ -917,7 +917,7 @@ function sugerir_dias_uteis($data_inicio, $data_fim) {
     return $total;
 }
 
-// Calcula a pré-fatura: valor mensal da tabela × dias trabalhados ÷ dias úteis.
+// Calcula a pré-fatura: valor do dia útil (valor mensal da tabela ÷ dias úteis) × dias trabalhados.
 // Domingo/feriado é cobrado pela coluna Diarista Extra › Domingos/Feriados. Horas extras não entram na pré-fatura.
 // Retorna [linhas do quadro, substituições/extras, totais, avisos]
 function calcular_pre_fatura(PDO $pdo, $empresa_id, $data_inicio, $data_fim, $funcionario_id, $filial_id, $dias_uteis) {
@@ -935,8 +935,8 @@ function calcular_pre_fatura(PDO $pdo, $empresa_id, $data_inicio, $data_fim, $fu
     };
     $sql_especial = "(DAYOFWEEK(c.data_referencia) = 1 OR c.dia_especial = 1 OR EXISTS (SELECT 1 FROM feriados fe WHERE fe.filial_id = c.filial_id AND fe.data = c.data_referencia))";
 
-    // Quadro fixo: valor final = valor mensal − faltas × valor p/ dia útil (falta descontada uma vez).
-    // Falta coberta por diarista (Substituído) não é descontada: o posto foi coberto e já está no valor mensal.
+    // Quadro fixo: valor final = valor p/ dia útil × dias trabalhados (+ domingos/feriados).
+    // Falta coberta por diarista (Substituído) conta como dia trabalhado: o posto foi coberto.
     // Presente e Justificado contam como trabalhado; domingo/feriado trabalhado é somado pela coluna Domingos/Feriados.
     $sql = "SELECT f.id, f.nome, c.filial_id, COALESCE(c.cargo, f.cargo) AS cargo, COALESCE(c.turno, f.turno) AS turno,
                    SUM(NOT $sql_especial) AS dias_lancados,
@@ -967,16 +967,17 @@ function calcular_pre_fatura(PDO $pdo, $empresa_id, $data_inicio, $data_fim, $fu
         $linha = [
             'nome' => $r['nome'], 'cargo' => $r['cargo'], 'turno' => $r['turno'], 'filial' => $filiais[$r['filial_id']] ?? '',
             'mensal' => round($vd * $dias_uteis, 2), 'vd' => $vd, 'dias_base' => $dias_base,
-            'base' => round($vd * $dias_base, 2), 'faltas' => $faltas, 'substituidos' => (int)$r['substituidos'], 'desconto' => round($vd * $faltas, 2),
+            'base' => round($vd * $dias_base, 2), 'faltas' => $faltas, 'substituidos' => (int)$r['substituidos'],
             'dias_esp' => (int)$r['dias_esp'], 'vde' => $vde, 'adicional' => round($vde * (int)$r['dias_esp'], 2),
             'he' => (float)$r['he'],
-            // Dias trabalhados em dia normal (domingo/feriado ficam na coluna própria)
-            'trabalhados' => max((int)$r['dias_lancados'] - (int)$r['faltas'], 0),
+            // Dias trabalhados em dia normal, incluindo faltas cobertas (domingo/feriado ficam na coluna própria)
+            'trabalhados' => max((int)$r['dias_lancados'] - $faltas, 0),
         ];
         $linha['bruto'] = round($vd * $linha['trabalhados'], 2);
         $linha['dias'] = $linha['trabalhados'];
-        // Falta descontada uma vez só, do valor mensal (modelo da planilha)
-        $linha['valor'] = round(max($linha['mensal'] - $linha['desconto'], 0) + $linha['adicional'], 2);
+        // Desconto = o que o valor mensal teria a mais do que os dias trabalhados (faltas e dias sem trabalho)
+        $linha['desconto'] = round(max($linha['mensal'] - $linha['bruto'], 0), 2);
+        $linha['valor'] = round($linha['bruto'] + $linha['adicional'], 2);
         $totais['func'] += $linha['valor'];
         $totais['dias'] += $linha['dias'] + $linha['dias_esp'];
         $totais['he'] += $linha['he'];
@@ -1051,7 +1052,7 @@ function render_tabelas_fatura(array $func, array $diar, array $totais, $escopo,
                         <th class="num">Valor p/ dia útil</th>
                         <th class="num">Dias trabalhados</th>
                         <th class="num">Faltas</th>
-                        <th class="num th-desconto">Desconto de faltas</th>
+                        <th class="num th-desconto" title="Diferença entre o valor mensal e os dias trabalhados">Desconto</th>
                         <?php if ($tem_esp): ?><th class="num" title="Domingos e feriados trabalhados, pela coluna Domingos/Feriados">Dom/Feriado</th><?php endif; ?>
                         <th class="num">Valor</th>
                     </tr>
@@ -1099,7 +1100,7 @@ function render_tabelas_fatura(array $func, array $diar, array $totais, $escopo,
     $secoes = [
         'sub'   => ['Substituições', 'arrow-left-right', $sub_soma
             ? 'Diaristas cobrindo faltas do quadro. Valor da coluna do cargo da diarista (Líder, Conferente ou Ajudante/Substituto), inclusive em domingo ou feriado.'
-            : 'Diaristas cobrindo faltas do quadro. Não somam no total: o dia já está no valor mensal do funcionário substituído (a falta coberta não é descontada).', 'Nenhuma substituição no período.', 'Subtotal das substituições'],
+            : 'Diaristas cobrindo faltas do quadro. Não somam no total: o dia coberto já conta como trabalhado para o funcionário substituído.', 'Nenhuma substituição no período.', 'Subtotal das substituições'],
         'extra' => ['Extras', 'person-plus', 'Diaristas chamadas por aumento de demanda. Valor da coluna Diarista Extra › Semana ou Domingos/Feriados.', 'Nenhum extra no período.', 'Subtotal dos extras'],
     ];
     foreach ($secoes as $chave => [$titulo, $icone, $descricao, $vazio, $rotulo]):
@@ -1175,7 +1176,7 @@ function exportar_csv_fatura($nome_arquivo, array $func, array $diar, array $tot
     }
     $linhas_quadro[] = ['Subtotal extras', '', '', '', '', '', csv_num($totais['extra'])];
     $linhas_quadro[] = ['TOTAL', '', '', '', '', '', csv_num($totais['geral'])];
-    exportar_csv($nome_arquivo, ['Colaborador', 'Operação', 'Valor mensal', 'Valor p/ dia útil', 'Dias trabalhados', 'Faltas', 'Desconto de faltas', 'Dom/Feriado (dias)', 'Dom/Feriado (R$)', 'Valor'], $linhas_quadro);
+    exportar_csv($nome_arquivo, ['Colaborador', 'Operação', 'Valor mensal', 'Valor p/ dia útil', 'Dias trabalhados', 'Faltas', 'Desconto', 'Dom/Feriado (dias)', 'Dom/Feriado (R$)', 'Valor'], $linhas_quadro);
 }
 
 // ---------------------------------------------------------------------------
